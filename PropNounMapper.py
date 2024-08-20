@@ -16,10 +16,17 @@ from fuzzywuzzy import fuzz
 # import a library can be used to convert Chinese characters to Pinyin
 from pypinyin import pinyin, lazy_pinyin, Style
 
+# define a variable of Chinese novel file path
+cnNovelPath = "10wYears.epub"
+# define a variable of English novel file path
+enNovelPath = "10wYears-en.epub"
+
 # set a limit to the number of chapters to be processed. this is to avoid processing the entire novel, which will take a long time.
 chapterLimit = 9999
 # Config max number of threads to use.
 maxThreads = 20
+
+onlyRetainAtLeastTwoUpperLetter = True
 
 enNlp = spacy.load("en_core_web_lg") # load the English model
 cnNlp = spacy.load("zh_core_web_lg") # load the Chinese model
@@ -182,7 +189,7 @@ def processChapter(chapter, nlp, properNounDict):
 
 
 # load the origin Chinese epub file
-book = epub.read_epub('wudaozongshi.epub')
+book = epub.read_epub(cnNovelPath)
 
 # get the content dictionary of the Chinese novel
 zhContentDict = getContentDict(book)
@@ -227,7 +234,7 @@ print(zhProperNounPinyinDict)
 
 
 # load the English translated epub file
-book = epub.read_epub('wudaozongshi-en.epub')
+book = epub.read_epub(enNovelPath)
 
 
 # get the content dictionary of the English translated novel
@@ -290,7 +297,9 @@ zhEnProperNounDict = [item for item in zhEnProperNounDict if len(item[0]) > 1]
 print(zhEnProperNounDict)
 
 # remove en proper noun which has upper letter length of 1
-zhEnProperNounDict = [item for item in zhEnProperNounDict if len([c for c in item[1][0] if c.isupper()]) > 1]
+if (onlyRetainAtLeastTwoUpperLetter):
+    zhEnProperNounDict = [item for item in zhEnProperNounDict if len([c for c in item[1][0] if c.isupper()]) > 1]
+
 
 
 # save the result dictionary to a readable json file.

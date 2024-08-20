@@ -38,8 +38,8 @@ def replaceEqub(zhEnProperNounPairDict, equbFile):
     epub.write_epub("zh_" + equbFile, book)
     return properNounCountDict
 
-# define the equb file to be processed
-equbFile = "wudaozongshi-en.epub"
+# define the English equb file to be processed
+equbFile = "10wYears-en.epub"
 
 pairDict = readZhEnProperNounPairDict()
 
